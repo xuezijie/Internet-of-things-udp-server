@@ -1,0 +1,929 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="usrCloud" ng-controller="fireSolutionCtrl">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Monitor screen</title>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="css/style.css" />
+    <link type="text/css" rel="stylesheet" href="css/ionicons.css" />
+    <link type="text/css" rel="stylesheet" href="css/easyui.css" />
+    <link rel="stylesheet" href="css/font-awesome.css" />
+    <link rel="stylesheet" href="css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="css/main.css" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&amp;ak=0UeqWhqYsjiNbWkLdaPdvSqc"></script>
+    <script type="text/javascript"
+        src="https://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+    <script type="text/javascript"
+        src="https://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+    <script type="text/javascript" src="https://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+    <!--<script type="text/javascript" src="http://maps.google.cn/maps/api/js?key=AIzaSyCQ-P7ciemHGgNNTv1vMmdW5yBgwpQKxwA&libraries=visualization"></script>-->
+    <!--<script type="text/javascript" src="js/markerclusterer.js"></script>-->
+    <style>
+        .ng-cloak {
+            display: none;
+        }
+
+        #main .baifenbi {
+            position: relative;
+            top: -20px;
+            left: -15px;
+        }
+
+        .shuju {
+            margin-left: 10px
+        }
+    </style>
+</head>
+
+<body ng-cloak style="font-size: 12px !important; background-color: #011226" id="body">
+    <header id="header" class="usr_header clearfix">
+        <div class="logo_company" id="system_name">Monitor screen</div>
+        <div class="header_info">
+            <!--<p id="company_name">消防报警解决方案</p>-->
+            <p id="time" style="margin-top: 20px;"></p>
+        </div>
+    </header>
+    <section id="main" class="ng-cloak">
+        <div class="usr_left">
+            <div id="usr_left">
+                <div class="panel alarm_about">
+                    <div class="title">Device online status statistics</div>
+                    <div id="panelDiv" style="display: flex; height:100%;flex-direction: column;">
+                        <div class="panel_div2 flex1">
+                            <div class="usr_chart">
+                                <div class="chart_center">
+                                    <image class="baifenbi" src="./images/baifenbi.png"
+                                        mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror=""
+                                        bindload="" />
+                                </div>
+                                <div id="chart_panel1" style="width:100%;height: 85%;"></div>
+                            </div>
+                            <div class="usr_chart_right">
+                                <div class="chart_content_100">The total number of devices<span class="span3">10</span>
+                                </div>
+                                <div class="chart_content_100">Online equipment<span class="span1">2</span></div>
+                                <div class="chart_content_100">Offline equipment<span class="span2">8</span></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="panel alarm_about">
+                    <div class="title">Alarm status statistics</div>
+                    <div class="panel_div2 flex1">
+                        <div class="usr_chart">
+                            <div class="chart_center">
+                                <image class="baifenbi" src="./images/baifenbi2.png"
+                                    mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="" />
+                            </div>
+                            <div id="chart_panel3" style="width:100%;height:85%;"></div>
+                        </div>
+                        <div class="usr_chart_right">
+                            <div class="chart_content_100">Have to deal with<span class="span1">4</span></div>
+                            <div class="chart_content_100">Untreated<span class="span2">1</span></div>
+                            <div class="chart_content_100">False positives<span class="span3">0</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel flex1">
+                    <div class="title">The number of newly added equipment in the past 30 days</div>
+                    <div id="chart_panel4" style="width:100%;height:85%;"></div>
+                    <!-- <image class="" src="./images/zhuzhuangtu.png" mode="aspectFit|aspectFill|widthFix"
+                        lazy-load="false" binderror="" bindload="" /> -->
+                    <div id="zhuzhuangtu" style="width: 300px;height:300px;margin-left: -10px;color: white">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="usr_center">
+            <div id="mapTab">
+                <ul id="myTab2" class="nav-tabs">
+                    <li class="active"><a href="#map1" data-toggle="tab"
+                            style="color: #fff; border: none; text-decoration: none">Map</a></li>
+                    <li><a href="#map2" data-toggle="tab" style="color: #fff;border: none; text-decoration: none">Heat
+                            map</a></li>
+                </ul>
+                <div id="myTab2Content" class="tab-content">
+                    <div class="tab-pane fade in active" id="map1">
+                        <div id="allmap">
+                            <image style="width:100%" src="./images/ditu2.png" mode="aspectFit|aspectFill|widthFix"
+                                lazy-load="false" binderror="" bindload="" />
+                            <!-- <div id="ditu123" style="height: 800px"></div> -->
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="map2">
+                        <div id="chart_panel7" style="width: 500px;height:500px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="usr_dev">
+                <div class="dev1"></div>
+                <div class="dev2"></div>
+                <div class="dev3"></div>
+                <div class="dev4"></div>
+                <div class="tableInfo">
+                    <div class="info_left" style="width: 100%">
+                        <div class="info_title">
+                            <!--<div id="dev_id">{{devInfo.deviceId}}</div>-->
+                            <!-- <div> <span id="dev_title">测试点1</span></div> -->
+                            <div>
+                                <input type="checkbox" name="test" value="1">test1
+                                <input type="checkbox" name="test" value="2">test2
+                                <input type="checkbox" name="test" value="3">test3
+                                <input type="checkbox" name="test" value="4">test4
+                            </div>
+
+                        </div>
+                        <div class="info_address">
+                            <i class="ion-ios-location"></i>
+                            <span id="dev_address">NEAU-ChengDong</span>
+
+                        </div>
+                        <div class="info_content">
+
+                            <div class="shebeiImg"><img ng-src="{{'/uploads/'+img}}" /></div>
+                            <div class="databox">
+
+                                <!-- 修改数据点值的模态框（Modal） -->
+                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+                                    aria-labelledby="datapointEdit" aria-hidden="true">
+                                    <div class="modal-dialog modal-md" style="width: 300px;">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-hidden="true">×
+                                                </button>
+                                                <h4 class="modal-title" id="datapointEdit">
+                                                    {{dialogTit}}
+                                                </h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="text" class="form-control" placeholder=""
+                                                    ng-model="newValue" required>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                                </button>
+                                                <button type="button" class="btn btn-primary"
+                                                    ng-click="sendNewValue(newValue)">
+                                                    提交更改
+                                                </button>
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+
+
+
+                            </div>
+                            <div class="four_dialogbtn">
+                                <div class=" dialogbtn history " style="width:150px">
+
+                                    <h3 data-toggle="modal" data-target="#myModal_second">Alarm Number：0</h3>
+                                </div>
+                                <div class=" dialogbtn history shuju">
+                                    <h3 data-toggle="modal" data-target="#myModal_first">
+                                        Number: 1</h3>
+
+                                </div>
+
+                                <div class=" dialogbtn history shuju" ng-show="mapTrackBtnVisible" style="width:200px">
+
+                                    <h3 data-toggle="modal" data-target="#myModal_forth"> direction：100.394409</h3>
+                                </div>
+                                <div class=" dialogbtn history shuju">
+
+                                    <h3 data-toggle="modal" data-target="#myModal_third" ng-click="clickSCADA()"
+                                        ng-show="independentAppData">
+                                        adhibition</h3>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="usr_left">
+            <div id="usr_right">
+                <div class="panel alarm_height" id="alarm_height">
+                    <!--<div class="title"><span><a href="../main.html#/trigger/alarmHistoryList/alarmId/devId//dataId/" target="_blank">更多</a> </span>警情记录</div>-->
+                    <div class="title">Alert records</div>
+                    <div style="position:relative;height: 90%;overflow:hidden;margin: 0 auto;">
+                        <div class="_scroll" id="scrollAlarm">
+                            <div class="_panel-box">
+                                <ul class="alarm_list" id="alarm_list">
+                                    <li ng-repeat="alarmItem in alarmItems">
+                                        <div ng-show="!(alarmItem.alarmState===1 && alarmItem.status===0)"
+                                            title="{{alarmItem.deviceName}}({{alarmItem.dataPointName}})&nbsp;:&nbsp; {{ alarmItem.content }}">
+                                            【{{getStatus(alarmItem.status)}}】{{alarmItem.deviceName}}({{alarmItem.dataPointName}})&nbsp;:&nbsp;
+                                            {{alarmItem.content}}</div>
+                                        <div ng-show="alarmItem.alarmState===1 && alarmItem.status===0"
+                                            style="cursor: pointer" ng-click="editAlarmProcess(alarmItem.id)"
+                                            title="{{alarmItem.deviceName}}({{alarmItem.dataPointName}})&nbsp;:&nbsp; {{ alarmItem.content }}">
+                                            【{{getStatus(alarmItem.status)}}】{{alarmItem.deviceName}}({{alarmItem.dataPointName}})&nbsp;:&nbsp;
+                                            {{alarmItem.content}}</div>
+                                        <span>{{alarmItem.alarmTime*1000|date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="group_height" class="panel flex1" style="height:400px">
+                    <div class="title">Device grouping list</div>
+                    <div class="title">group1</div>
+                    <div class="title" style="font-size:10px">NEAU-ChengDong</div>
+                    <div class="title">group2</div>
+                    <div class="title">group3</div>
+                    <div style="position:relative;height: 90%;overflow:hidden;margin: 0 auto;">
+                        <div class="_scroll" id="scroll">
+                            <div class="subList" id="subList">
+                                <h5 style="color: #0a6aa1; font-weight: bold;margin-bottom: 10px;">当前分组下设备</h5>
+                                <button id="return" class="return">返回分组</button>
+                                <p ng-show="tipShow">该分组下暂无设备</p>
+                                <ul id="cursonList" style="width: 100%;height: 100%;">
+                                    <li ng-repeat="item in subList" ng-click="jumpToCurrentDev(item.devid)">
+                                        {{item.name}}
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <!--<ul class="_panel-box alarm_list">-->
+                            <!--<li class="ion-ios-arrow-right"  ng-cloak   ng-repeat="item in groupItems" ng-click="getDevList(item.id)" style="cursor: pointer">{{item.title}}</li>-->
+                            <!--</ul>-->
+                            <div class="_panel-box">
+                                <tree-view tree-data="groupItems"></tree-view>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="myModal_first" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_first"
+        style="z-index:1000">
+        <div class="modal-dialog modal-95" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel" style="color: #fff">历史曲线
+                        <!--{{common_devid}}-->
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="dataHistory" ng-controller="DataHistoryPageCtrl" class="model_one">
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="height: 100%;">
+                                <div class="panel animated clearfix" style="height:500px;">
+                                    <div class="panel-heading clearfix history_time" style="height: auto;">
+                                        <h3
+                                            style="width:auto;line-height:33px; float: left; margin-right: 40px; display: inline-block">
+                                            历史曲线</h3>
+                                        <div class="history_list_item_box">
+                                            <div class="history_list_item">
+                                                <div class="paramDiv2">
+                                                    <div class="paramCur2"><i></i>{{devIdSelected?devidName:'选择设备'}}
+                                                    </div>
+                                                    <div class="paramHover2">
+                                                        <div class="paramHover_padding">
+                                                            <div class="col-xs-12">
+                                                                <div class="form-group">
+                                                                    <div class="input-group ng-scope">
+                                                                        <input class="form-control with-primary-addon"
+                                                                            placeholder="设备编号或名称"
+                                                                            ng-model="devidOrName">
+                                                                        <span class="input-group-btn"
+                                                                            style="float: none;">
+                                                                            <button class="btn btn-primary"
+                                                                                type="button" ng-click="getDevList()"
+                                                                                style="margin-top: 0px;">查询</button>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 form-group clearfix"
+                                                                ng-repeat="dev in devList">
+                                                                <label class="radio-inline custom-radio nowrap">
+                                                                    <input type="radio"
+                                                                        ng-click="devName($parent.devIdSelected)"
+                                                                        ng-model="$parent.devIdSelected"
+                                                                        ng-checked="dev.devid==common_devid"
+                                                                        value="{{dev.devid}}" id="dev{{$index}}" />
+                                                                    <span>{{dev.name}} ({{dev.devid}})</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="page-list col-xs-12">
+                                                                <ul class="pagination">
+                                                                    <li ng-click="previous()"><span>&lt;</span></li>
+                                                                    <li ng-click="next()"><span>&gt;</span></li>
+                                                                </ul>
+                                                                <div class="page-total">共{{devTotal}}条</div>
+                                                                <!--<div ng-if="cur_lang=='en'" class="page-total">Total {{devTotal}}</div>-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="alerm_history_item">
+                                                &nbsp;&nbsp;从机：
+                                                <select class="txt_height" ng-model="slaveSelected"
+                                                    ng-change="slaveChange(slaveSelected)"
+                                                    ng-options="slave.slaveIndex as slave.slaveName for slave in slaveList"></select>
+                                            </div>
+                                            <div class="history_list_item">
+                                                &nbsp;&nbsp;数据点：
+                                                <!--<select class="txt_height" ng-model="dataPointIdSelected" ng-change="dataPointChange(dataPointIdSelected)" ng-options="dataPoint.id as dataPoint.name for dataPoint in dataPointList"></select>-->
+                                                <div class="paramDiv2">
+                                                    <div class="paramCur2"><i></i>选择数据点</div>
+                                                    <div class="paramHover2" style="width: auto;">
+                                                        <div class="paramHover_padding">
+                                                            <div class="col-xs-12 form-group clearfix"
+                                                                ng-repeat="dataPoint in dataPointList"
+                                                                on-finish-render-filters>
+                                                                <label class="checkbox-inline custom-checkbox nowrap">
+                                                                    <input type="checkbox" name="{{dataPoint.name}}"
+                                                                        id="{{dataPoint.id}}"
+                                                                        ng-checked="isSelected(dataPoint.id)"
+                                                                        ng-click="updateSelection($event,dataPoint.id)" />
+                                                                    <span>{{dataPoint.name}}</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="history_list_item">
+                                                &nbsp;&nbsp;时间段：
+                                                <div id="reportrange"
+                                                    class="pull-right form-control start_time with-danger-addon"
+                                                    style="float:none !important;display: inline-block;width:auto; ">
+                                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                                                    <span>{{test123}}</span> <b class="caret"></b>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div style="float: right">
+                                            <button style="margin: 0;" type="button" class="btn btn-primary "
+                                                ng-click="generateChart()">搜索</button>
+                                            <button style="margin: 0;" type="button" class="btn btn-primary "
+                                                ng-click="downloadHistory()">下载数据</button>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body history_body_content">
+                                        <div ng-if="!hisLoadFinished" style="text-align:center;">
+                                            <div class="loaderData"></div>
+                                        </div>
+                                        <line-chart ng-if="hisLoadFinished" config="config" data="multiple"
+                                            id="config_data"></line-chart>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-4 col-blg-3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal_second" role="dialog" aria-labelledby="myModalLabel_second"
+        style="z-index:1000">
+        <div class="modal-dialog modal-95" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel2" style="color: #fff">报警记录
+                        <!--{{common_devid}}-->
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="dataHistory2" ng-controller="AlarmHistoryListPageCtrl" class="model_one">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="panel animated zoomIn" style="height: 700px; overflow: scroll">
+                                    <div class="panel-heading clearfix alerm_ring" style="height: auto;">
+                                        <div class="alerm_history_item">
+                                            <div class="paramDiv2">
+                                                <div class="paramCur2"><i></i>{{devIdSelected?devidName:'选择设备'}}</div>
+                                                <div class="paramHover2">
+                                                    <div class="paramHover_padding">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                <div class="input-group ng-scope">
+                                                                    <input class="form-control with-primary-addon"
+                                                                        placeholder="设备编号或名称" ng-model="devidOrName">
+                                                                    <span class="input-group-btn" style="float: none;">
+                                                                        <button class="btn btn-primary" type="button"
+                                                                            ng-click="getDevList()"
+                                                                            style="margin-top: 0px;">查询</button>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 form-group clearfix"
+                                                            ng-repeat="dev in devList">
+                                                            <label class="radio-inline custom-radio nowrap">
+                                                                <input type="radio"
+                                                                    ng-click="devName($parent.devIdSelected)"
+                                                                    ng-model="$parent.devIdSelected"
+                                                                    ng-checked="dev.devid==common_devid"
+                                                                    value="{{dev.devid}}" id="dev{{$index}}" />
+                                                                <span>{{dev.name}} ({{dev.devid}})</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="page-list col-xs-12">
+                                                            <ul class="pagination">
+                                                                <li ng-click="previous()"><span>&lt;</span></li>
+                                                                <li ng-click="next()"><span>&gt;</span></li>
+                                                            </ul>
+                                                            <div class="page-total">共{{devTotal}}条</div>
+                                                            <!--<div ng-if="cur_lang=='cn'" class="page-total">Total {{devTotal}}</div>-->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="alerm_history_item">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;从机：
+                                            <select ng-model="slaveSelected" ng-change="slaveChange(slaveSelected)"
+                                                class="txt_height">
+                                                <option value="">请选择...</option>
+                                                <option ng-repeat="slave in slaveList" value="{{slave['slaveIndex']}}">
+                                                    {{slave['slaveName']}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="alerm_history_item">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;数据点：
+                                            <select ng-model="dataPointIdSelected"
+                                                ng-change="dataPointChange(dataPointIdSelected)" class="txt_height">
+                                                <option value="">请选择...</option>
+                                                <option ng-repeat="dataPoint in dataPointList"
+                                                    value="{{dataPoint['id']}}">{{dataPoint['name']}}</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="alerm_history_item">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;时间段：
+                                            <div id="reportrange2"
+                                                class="pull-right form-control alerm_time  with-danger-addon"
+                                                style="display: inline-block;width:auto;">
+                                                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                                                <span></span> <b class="caret"></b>
+                                            </div>
+                                        </div>
+                                        <button style="float: right;width: auto;margin: 0;" type="button"
+                                            class="btn btn-primary " ng-click="downloadAlarm()">下载数据</button>
+                                    </div>
+                                    <div class="panel-body alerm_content">
+                                        <div ng-if="!alarmLoadFinished" style="text-align:center;">
+                                            <div class="loaderData"></div>
+                                        </div>
+                                        <table class="table table-striped data_history_list" ng-if="alarmLoadFinished">
+                                            <thead>
+                                                <tr>
+                                                    <th>设备名称</th>
+                                                    <th>从机名称</th>
+                                                    <th>数据点名称</th>
+                                                    <th>当前值</th>
+                                                    <th>报警内容</th>
+                                                    <th>报警时间</th>
+                                                    <th>处理状态</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="alarmItem in alarmItems">
+                                                    <td><a
+                                                            ui-sref="device.deviceDatail({'devId':alarmItem.deviceId})">{{alarmItem.deviceName}}</a>
+                                                    </td>
+                                                    <td>{{alarmItem.slaveName?alarmItem.slaveName:'--'}}</td>
+                                                    <td>{{alarmItem.dataPointName}}</td>
+                                                    <td>{{alarmItem.alarmValue}}</td>
+                                                    <td>{{alarmItem.content}}</td>
+                                                    <td>{{alarmItem.alarmTime*1000|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                                    <td>{{getStatus(alarmItem.status)}}</td>
+                                                    <td ng-show="alarmItem.alarmState!==1"></td>
+                                                    <td ng-show="alarmItem.alarmState===1">
+                                                        <a class="operation"
+                                                            ng-click="previewAlarmProcess(alarmItem.id)"
+                                                            title="预览报警处理"><i class="ion-ios-search-strong"></i></a>
+                                                        <a ng-show="alarmItem.status===0" class="operation"
+                                                            ng-click="editAlarmProcess(alarmItem.id)" title="处理报警"><i
+                                                                class="ion-compose"></i></a>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="8" class="text-center">
+                                                        <tm-pagination conf="paginationConf"></tm-pagination>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--定位轨迹-->
+    <div class="modal fade" id="myModal_forth" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_forth"
+        style="z-index:1000">
+        <div class="modal-dialog modal-95" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel4" style="color: #fff">定位轨迹
+                        <!--{{common_devid}}-->
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="widgets" ng-controller="DeviceMapTrackPageCtrl">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel animated">
+                                    <div class="panel-heading clearfix history_time" style="height: auto;">
+                                        <div class="history_list_item_box">
+                                            <div class="history_list_item">
+                                                <div class="paramDiv2">
+                                                    <div class="paramCur2"><i></i>选择设备</div>
+                                                    <div class="paramHover2" style="width: 450px;">
+                                                        <div class="paramHover_padding">
+                                                            <div class="col-xs-12 form-group clearfix">
+                                                                <div class="form-group">
+                                                                    <div class="input-group ng-scope">
+                                                                        <input class="form-control with-primary-addon"
+                                                                            placeholder="设备编号或名称"
+                                                                            ng-model="devidOrName">
+                                                                        <span class="input-group-btn"
+                                                                            style="float: none;">
+                                                                            <button class="btn btn-primary"
+                                                                                type="button" ng-click="getDevList()"
+                                                                                style="margin-top: 0;">查询</button>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 form-group clearfix"
+                                                                ng-repeat="dev in devItems" on-finish-render-filters>
+                                                                <label class="checkbox-inline custom-checkbox nowrap">
+
+                                                                    <input type="checkbox" name="{{dev.name}}"
+                                                                        id="{{dev.devid}}"
+                                                                        ng-checked="isSelected(dev.devid)   "
+                                                                        ng-click="updateSelection($event,dev.devid)" />
+
+                                                                    <span>{{dev.name}}({{dev.devid}})</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-xs-12 form-group clearfix">
+                                                                <tm-pagination conf="paginationConf"></tm-pagination>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="history_list_item">
+                                                &nbsp;&nbsp;时间段：
+                                                <div id="reportrange4"
+                                                    class="pull-right form-control start_time with-danger-addon"
+                                                    style="float:none !important;display: inline-block;width:auto;">
+                                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                                                    <span></span> <b class="caret"></b>
+                                                </div>
+                                            </div>
+                                            <button style="margin: 0;" type="button" class="btn btn-primary "
+                                                ng-click="getMapTracks()">搜索</button>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div id="allmap4"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal_third" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_third"
+        style="z-index:1000">
+        <div class="modal-dialog modal-95" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel3">组态应用</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="dataHistory3" class="model_one" style="height: 800px;">
+                        <div class="col-xs-12 scada_screen" ng-repeat="x in linkArry track by $index">
+                            <iframe width="100%" height="{{x.h}}" scrolling="auto" frameborder="0"
+                                ng-src="{{x.link}}"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/ng-template" id="previewAlarmProcess.html">
+    <div class="modal-content" >
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="ok()" aria-label="Close">
+                <em class="ion-ios-close-empty sn-link-close"></em>
+            </button>
+            <h4 class="modal-title">预览报警处理</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group clearfix">
+                <label class="col-sm-5 control-label" style="text-align: right">处理状态：</label>
+                <div class="col-sm-7">{{getStatus(status)}}</div>
+            </div>
+            <div class="form-group clearfix">
+                <label class="col-sm-5 control-label" style="text-align: right">处理结果：</label>
+                <div class="col-sm-7">{{description?description:'--'}}</div>
+            </div>
+            <div class="form-group clearfix">
+                <label class="col-sm-5 control-label" style="text-align: right">处理时间：</label>
+                <div class="col-sm-7">{{processTime?(processTime*1000|date:'yyyy-MM-dd HH:mm:ss'):'--'}}</div>
+            </div>
+        </div>
+    </div>
+</script>
+    <script type="text/ng-template" id="editAlarmProcess.html">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="ok()" aria-label="Close">
+                <em class="ion-ios-close-empty sn-link-close"></em>
+            </button>
+            <h4 class="modal-title">处理报警</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group clearfix">
+                <label class="col-xs-4 col-sm-4 col-md-3 control-label">处理状态<em style="color: red">*</em>：</label>
+                <div class="col-xs-9 col-sm-6">
+                    <label class="radio-inline custom-radio nowrap">
+                        <input type="radio" ng-model="status" ng-checked="status=='0'" id="inputStatus0" value="0">
+                        <span>未处理</span>
+                    </label>
+                    <label class="radio-inline custom-radio nowrap">
+                        <input type="radio" ng-model="status" ng-checked="status=='1'" id="inputStatus1" value="1">
+                        <span>误报</span>
+                    </label>
+                    <label class="radio-inline custom-radio nowrap">
+                        <input type="radio" ng-model="status" ng-checked="status=='2'" id="inputStatus2" value="2">
+                        <span>已处理</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group clearfix">
+                <label class="col-xs-4 col-sm-4 col-md-3 control-label">处理结果：</label>
+                <div class="col-xs-9 col-sm-6">
+                    <textarea class="form-control" ng-model="description"></textarea>
+                </div>
+            </div>
+            <div class="form-group row clearfix">
+                <label class="col-xs-3  col-sm-3 control-label"></label>
+                <div class="col-xs-9 col-sm-6">
+                    <button type="button" ng-click="loading?'':editAlarmResult()" class="btn btn-primary btn-with-icon save-profile">
+                        <i class="{{loading?'ion-ios-loop-strong':'ion-android-checkmark-circle'}}"></i>保存<span class="{{loading?'loading':''}}"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+    <script type="text/ng-template" id="treeView.html">
+    <ul class="dev_group_list">
+        <li ng-repeat="item in treeData" ng-include="'treeItem.html'"></li>
+    </ul>
+</script>
+
+    <script type="text/ng-template" id="treeItem.html">
+    <span class="tree_ico" ng-class="{'leaf-node': isLeaf(item), 'expand-node': !isLeaf(item) && item.isExpand,'unexpand-node': !isLeaf(item) && !item.isExpand}" ng-click="toggleExpandStatus(item)"></span>
+    <span ng-class="{'tree_folder': !isLeaf(item) && !item.isExpand,'tree_file': isLeaf(item), 'expand_folder': !isLeaf(item) && item.isExpand,}"></span>
+    <!--<a ng-click="getDevListByGroup(item)">{{item.title}}</a>-->
+    <a data-id="{{item.id}}" onclick="getDevList(this)">{{item.title}}</a>
+    <ul ng-if="!isLeaf(item)" ng-show="item.isExpand" {{item.isExpand}}>
+        <li ng-repeat="item in item.childrens" ng-include="'treeItem.html'"></li>
+    </ul>
+</script>
+
+    <script type="text/javascript" src="../config/config.js"></script>
+    <script type="text/javascript" src="../lib/jquery.js"></script>
+    <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../lib/angular.js"></script>
+    <script type="text/javascript" src="../lib/angular-local-storage.min.js"></script>
+    <script type="text/javascript" src="../lib/angular-toastr.tpls.js"></script>
+    <script type="text/javascript" src="../lib/jsrsasign-4.1.4-all-min.js"></script>
+    <script type="text/javascript" src="../lib/json-sans-eval-min.js"></script>
+    <script type="text/javascript" src="../lib/jws-3.1.js"></script>
+    <script type="text/javascript" src="../lib/yi-scroll.js"></script>
+    <script type="text/javascript" src="../lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../lib/bootbox.min.js"></script>
+    <script type="text/javascript" src="../lib/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="../lib/echarts.min.js"></script>
+    <script type="text/javascript" src="./js/echarts.min.js"></script>
+    <script type="text/javascript" src="../lib/bmap.min.js"></script>
+    <script type="text/javascript" src="../lib/mqtt/mqttws31.js"></script>
+    <script type="text/javascript" src="../lib/mqtt/usrCloud.js"></script>
+    <script type="text/javascript" src="js/monitorCtrl.js"></script>
+    <script type="text/javascript" src="js/mqttService.js"></script>
+    <script type="text/javascript" src="js/httpRequest.js"></script>
+    <script type="text/javascript" src="js/phpHttpRequest.js"></script>
+    <script type="text/javascript" src="js/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="../lib/translate/angular-translate.min.js"></script>
+    <script type="text/javascript" src="../lib/translate/angular-translate-loader-static-files.min.js"></script>
+    <script type="text/javascript" src="js/moment.js"></script>
+    <script type="text/javascript" src="js/daterangepicker.js"></script>
+    <script type="text/javascript" src="js/angular-echarts.min.js"></script>
+    <script src="../lib/angular-animate.js"></script>
+    <script src="../lib/tm.pagination.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#databoxUl").slimScroll({
+                height: '100%',
+                width: '100%',
+                size: '5px',
+                color: '#576a81',
+                alwaysVisible: false,
+                railVisible: true,
+                railOpacity: 0.5,
+                wheelStep: 10,
+                allowPageScroll: false,
+                disableFadeOut: false,
+                position: 'right',
+            });
+        })
+    </script>
+    <script type="text/javascript">
+        $("._scroll").yi_scroll();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $(".paramDiv2").on("mouseenter", function () {
+                $(this).addClass("paramDiv-active")
+                $(this).find(".paramHover2").show();
+            }).on("mouseleave", function () {
+                $(this).removeClass("paramDiv-active");
+                $(this).find(".paramHover2").stop().hide();
+            })
+        });
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('zhuzhuangtu'));
+
+
+        option = {
+            xAxis: {
+                type: 'category',
+                data: ["3-26", "4-17", "4-19", "4-21"],
+                axisLine: {
+                    lineStyle: {
+                        color: 'white'
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: {
+                    lineStyle: {
+                        color: 'white'
+                    }
+                }
+            },
+            series: [{
+                data: [1, 2, 10, 1],
+                type: 'line'
+            }]
+        };
+
+
+        // 使用刚指定的配置项和数据显示图表。
+
+        myChart.color = myChart.setOption(option);
+
+
+        // content:为要显示的内容
+        // height: 弹框的高度
+        // time:为多少秒后关闭的时间，单位为秒
+        // bgColor:设置弹框的背景颜色
+        function showTips(content, width, height, time, status, bgColor = "#fff") {
+            //窗口的宽度
+            var windowWidth = $(window).width();   // 获取当前页面的宽度， 会随着页面实际宽度的改变而改变（是动态的）
+            var tipsDiv = '<div class="tipsClassContainer"><div class="tipsClass">' + content + '<button id="tip-btn">确认</button></div></div>';
+
+            if (status == false) {
+                $("body").append(tipsDiv);
+                $(".tipsClassContainer").css({
+                    "position": "absolute",
+                    "top": 1 + "px",
+                    "left": (Math.floor(windowWidth / 2)) - 100 + "px",
+                    "opacity": "0.8"
+                });
+                $("div.tipsClass").css({
+                    "width": width + "px",
+                    "height": height + "px",
+                    "line-height": height + "px",
+                    "background": bgColor,
+                    "padding": 3 + "px" + 5 + "px",
+                    "border-radius": 2 + "px",
+                    "text-align": "center",
+                    "color": "#333"
+                }).hide();
+                $("#tip-btn").css({
+                    "position": "absolute",
+                    "left": width + "px",
+                    "border": "none",
+                    "height": height + "px",
+                    "line-height": height + "px",
+                    "width": 60 + "px"
+                });
+                setTimeout(function () { $("div.tipsClass").fadeIn(); }, 300)
+                // setTimeout(function () { $('div.tipsClass').fadeOut(); }, (time * 1000));
+
+
+                // ********注意这是需要修改的位置**********************
+                $("#tip-btn").click(function () {
+                    $.ajax({
+                        // 注意接口地址需要修改
+                        url: "***********",//更改接口地址
+                        withCredencials: true
+                    }).then((res) => {
+                       // let result = JSON.parse(res);
+                       // console.log(result);
+                        // 注意改变if的条件：是从result中取出修改成功的状态， 暂时设置为true
+                        // 成功隐藏弹框
+                        //if(true){
+                            $('div.tipsClass').fadeOut();
+                       // }else{
+                            // 失败暂时不做操作
+                        //}
+
+                    })
+                });
+            }
+        }
+
+        $(function () {
+            // 点击开发发起请求
+            let status = true;   // 默认true表示是第一次点击，开始进行检测信号
+            let timer = null;
+
+            let isError = false;   // 用于控制弹框是否许需要一直显示
+
+            timer = setInterval(function () {
+                $.ajax({
+                    url: "**********",//接口地址
+                    withCredencials: true
+                }).then((res) => {
+                    // console.log(res);
+                    let result = JSON.parse(res);
+                    console.log(result);
+                    if (result.data[0].alert == "1") {
+                        console.log("异常警报");
+
+                        showTips("异常警告", 200, 50, 1.5, isError, "white");
+                        isError = true;
+                    } else {
+                        console.log("正确场景");
+                        // 表示正常什么都不做
+                    }
+                })
+            }, 5000);
+        });
+
+    </script>
+</body>
+
+</html>
